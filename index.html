@@ -518,7 +518,7 @@
 <script>
 // ===== DATA =====
 const tableData = [
-    { id: 'D0038243', name: 'Nguyễn Bá Phú', certName: 'Phu Nguyen Ba PhuNB2', email: 'phunb2@fpt.com', company: 'FPT IS', duration: '3', course: 'Claude 101', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0038243', name: 'Nguyễn Bá Phú', certName: 'Phu Nguyen Ba PhuNB2', email: 'phunb2@fpt.com', company: 'FPT IS', duration: '3', course: 'Claude 101', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '', certImage: 'assets/cert_phunb2.jpg' },
 ];
 
 let allData = [...tableData];
@@ -566,7 +566,7 @@ function renderTable() {
             <td>${row.approvedBy}</td>
             <td>${row.comment}</td>
             <td>
-                <span class="action-link" onclick="window.open('blob:https://elis.fpt.com/a89495ba-8505-4d1b-b314-bf6330a8126b', '_blank')" style="margin-right:10px;">View</span>
+                <span class="action-link" onclick="window.open('${row.certImage}', '_blank')" style="margin-right:10px;">View</span>
                 <span class="action-link" onclick="showToast('Downloading...', 'info')">Download</span>
             </td>
             <td>
