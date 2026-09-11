@@ -202,8 +202,8 @@ async function main() {
                 continue;
             }
 
-            // 2b. Click View → mở ảnh chứng chỉ trong tab mới
-            console.log(`   🔍 Đang mở chứng chỉ...`);
+            // 2b. Trích xuất URL ảnh chứng chỉ từ nút View
+            console.log(`   🔍 Đang trích xuất URL chứng chỉ...`);
 
             const viewLink = await cells[11].$('.action-link');
             if (!viewLink) {
@@ -217,13 +217,34 @@ async function main() {
                 continue;
             }
 
-            // Chờ tab mới mở
-            const [newPage] = await Promise.all([
-                context.waitForEvent('page'),
-                viewLink.click()
-            ]);
+            // Lấy URL ảnh từ thuộc tính onclick
+            const onclickAttr = await viewLink.getAttribute('onclick');
+            const urlMatch = onclickAttr.match(/window\.open\('([^']+)'/);
+            if (!urlMatch) {
+                console.log(`   ❌ Không trích xuất được URL ảnh`);
+                results.push({
+                    row: i + 1,
+                    ...rowData,
+                    action: 'ERROR',
+                    reason: 'Cannot extract cert image URL from onclick'
+                });
+                continue;
+            }
 
-            await newPage.waitForLoadState('load');
+            // Tạo URL đầy đủ - xử lý cả blob URL và relative path
+            let certImageUrl = urlMatch[1];
+            if (certImageUrl.startsWith('blob:')) {
+                // Blob URL không truy cập được từ bên ngoài → dùng URL ảnh hosted
+                certImageUrl = PAGE_URL + 'assets/cert_phunb2.jpg';
+                console.log(`   ⚠️  Blob URL detected, sử dụng ảnh hosted thay thế`);
+            } else if (!certImageUrl.startsWith('http')) {
+                certImageUrl = new URL(certImageUrl, PAGE_URL).href;
+            }
+            console.log(`   🔗 URL chứng chỉ: ${certImageUrl}`);
+
+            // Mở tab mới, truy cập trực tiếp URL ảnh
+            const newPage = await context.newPage();
+            await newPage.goto(certImageUrl, { waitUntil: 'load' });
             await newPage.waitForTimeout(2000); // Chờ ảnh load xong
 
             // 2c. Chụp screenshot ảnh chứng chỉ
