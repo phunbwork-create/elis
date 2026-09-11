@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Manage - e-Learning Information System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', 'Inter', Arial, sans-serif; font-size: 13px; color: #333; background: #f0f2f5; }
+        a { text-decoration: none; color: inherit; }
+        table { border-collapse: collapse; width: 100%; }
+
+        /* ===== TOP HEADER ===== */
+        .top-header {
+            background: #fff;
+            border-bottom: 2px solid #1565c0;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 48px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-header .brand {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px; font-weight: 700; color: #1a1a1a;
+            white-space: nowrap;
+        }
+        .top-header .brand i { color: #1565c0; margin-right: 6px; }
+        .top-nav {
+            display: flex; align-items: center; gap: 0; height: 100%;
+        }
+        .top-nav a {
+            padding: 0 14px; height: 100%;
+            display: flex; align-items: center;
+            font-size: 13px; font-weight: 500; color: #555;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        .top-nav a:hover { color: #1565c0; background: #f5f8ff; }
+        .top-nav a.active {
+            color: #e65100; font-weight: 600;
+            border-bottom-color: #e65100;
+        }
+        .top-right { display: flex; align-items: center; gap: 12px; }
+        .company-info { text-align: right; line-height: 1.3; }
+        .company-info .name { font-size: 11px; font-weight: 700; color: #1565c0; }
+        .company-info .role { font-size: 10px; color: #888; }
+        .user-avatar {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, #e65100, #ff8f00);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 13px;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-area { padding: 12px 20px 20px; }
+        .breadcrumb { font-size: 12px; color: #1565c0; margin-bottom: 4px; }
+        .breadcrumb a { color: #1565c0; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px; font-weight: 700; color: #1a1a1a;
+            margin-bottom: 14px; text-transform: uppercase;
+        }
+
+        /* ===== FILTER BAR ===== */
+        .filter-bar {
+            display: flex; align-items: flex-end; gap: 16px;
+            margin-bottom: 14px; flex-wrap: wrap;
+        }
+        .filter-group label {
+            display: block; font-size: 12px; font-weight: 600;
+            color: #555; margin-bottom: 4px;
+        }
+        .filter-group input,
+        .filter-group select {
+            padding: 6px 10px; border: 1px solid #ccc;
+            border-radius: 4px; font-size: 12px;
+            font-family: 'Roboto', sans-serif; background: #fff;
+        }
+        .filter-group input { width: 200px; }
+        .filter-group select { width: 140px; }
+        .filter-group input::placeholder { color: #aaa; font-size: 11px; }
+        .filter-actions { margin-left: auto; display: flex; gap: 8px; }
+        .btn-setting {
+            padding: 7px 16px; font-size: 12px; font-weight: 600;
+            border: none; border-radius: 4px; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .btn-setting.green { background: #43a047; color: #fff; }
+        .btn-setting.green:hover { background: #388e3c; }
+        .btn-setting.blue { background: #1565c0; color: #fff; }
+        .btn-setting.blue:hover { background: #0d47a1; }
+
+        /* ===== DATA TABLE ===== */
+        .table-wrapper {
+            background: #fff; border: 1px solid #ddd;
+            border-radius: 4px; overflow-x: auto;
+        }
+        .data-table { min-width: 1300px; }
+        .data-table thead { background: #1565c0; }
+        .data-table thead th {
+            color: #fff; font-size: 11.5px; font-weight: 600;
+            padding: 10px 8px; text-align: left; white-space: nowrap;
+            border-right: 1px solid rgba(255,255,255,0.15);
+            position: sticky; top: 0;
+        }
+        .data-table thead th:last-child { border-right: none; }
+        .data-table tbody tr {
+            border-bottom: 1px solid #eee; transition: background 0.15s;
+        }
+        .data-table tbody tr:hover { background: #f5f8ff; }
+        .data-table tbody tr:nth-child(even) { background: #fafbfc; }
+        .data-table tbody tr:nth-child(even):hover { background: #f0f4ff; }
+        .data-table tbody td {
+            padding: 8px 8px; font-size: 12px; color: #333;
+            border-right: 1px solid #f0f0f0; vertical-align: middle;
+            white-space: nowrap;
+        }
+        .data-table tbody td:last-child { border-right: none; }
+
+        /* Status badge */
+        .badge {
+            display: inline-block; padding: 3px 12px; border-radius: 3px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge.waiting { background: #ff9800; color: #fff; }
+        .badge.approved { background: #43a047; color: #fff; }
+        .badge.rejected { background: #e53935; color: #fff; }
+
+        /* Table action links */
+        .action-link {
+            color: #1565c0; font-size: 12px; cursor: pointer;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .action-link:hover { color: #0d47a1; text-decoration: underline; }
+        .approve-link {
+            color: #e65100; font-size: 12px; cursor: pointer;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .approve-link:hover { color: #bf360c; text-decoration: underline; }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex; align-items: center; justify-content: center;
+            gap: 2px; padding: 14px 0;
+        }
+        .pagination button {
+            width: 30px; height: 30px; border: 1px solid #ccc;
+            background: #fff; color: #333; font-size: 12px;
+            cursor: pointer; border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .pagination button:hover { background: #f0f0f0; }
+        .pagination button.active {
+            background: #1565c0; color: #fff; border-color: #1565c0;
+        }
+        .pagination button.nav-btn { font-size: 11px; color: #888; }
+
+        /* ===== CERTIFICATE VIEW MODAL ===== */
+        .modal-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); z-index: 1000;
+            align-items: flex-start; justify-content: center;
+            overflow-y: auto; padding: 30px 20px;
+            backdrop-filter: blur(3px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: #fff; border-radius: 8px;
+            width: 680px; max-width: 95%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalIn 0.3s ease-out; position: relative;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-close {
+            position: absolute; top: 12px; right: 14px;
+            width: 32px; height: 32px; background: rgba(0,0,0,0.1);
+            border: none; border-radius: 50%; font-size: 18px;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; color: #555; transition: all 0.2s; z-index: 10;
+        }
+        .modal-close:hover { background: rgba(0,0,0,0.2); color: #000; }
+        .modal-body { padding: 30px 40px 36px; }
+
+        /* Certificate card */
+        .certificate-card {
+            background: #6ba3c7; border-radius: 8px;
+            padding: 40px 50px 36px; text-align: center;
+            position: relative; margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .cert-badge {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.25);
+            border: 2px solid rgba(0,0,0,0.15);
+            border-radius: 30px; padding: 8px 28px 8px 12px;
+            margin-bottom: 32px;
+        }
+        .cert-badge .check-icon {
+            width: 32px; height: 32px;
+            border: 2px solid #333; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.15);
+        }
+        .cert-badge .check-icon i { font-size: 16px; color: #333; }
+        .cert-badge span {
+            font-size: 16px; font-weight: 600; color: #222;
+            letter-spacing: 3px; text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+        .cert-badge span small {
+            font-size: 14px; font-weight: 400;
+            text-transform: lowercase; letter-spacing: 1px;
+        }
+        .cert-name {
+            font-family: 'Inter', serif; font-size: 30px; font-weight: 400;
+            color: #1a2a3a; margin-bottom: 8px; line-height: 1.3;
+        }
+        .cert-subtitle {
+            font-size: 14px; font-style: italic; color: #3a4a5a;
+            margin-bottom: 14px; font-family: 'Inter', serif;
+        }
+        .cert-course {
+            font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 700;
+            color: #111; margin-bottom: 28px; line-height: 1.3;
+        }
+        .cert-org {
+            font-size: 20px; font-weight: 700; color: #222;
+            letter-spacing: 4px; text-transform: uppercase;
+            margin-bottom: 28px; font-family: 'Inter', sans-serif;
+        }
+        .cert-partners {
+            display: flex; align-items: center; justify-content: center;
+            gap: 24px; flex-wrap: wrap;
+        }
+        .cert-partner {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 10px; color: #2a3a4a;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px; border-radius: 4px;
+        }
+        .cert-partner i { font-size: 16px; }
+        .cert-partner strong { font-weight: 700; font-size: 11px; }
+        .cert-partner span { font-size: 9px; line-height: 1.2; }
+
+        /* Validation table */
+        .validation-section { margin-top: 6px; }
+        .validation-table {
+            width: 480px; max-width: 100%;
+            margin: 0 auto; border: 1px solid #ddd;
+            border-radius: 4px; overflow: hidden;
+        }
+        .validation-table .v-header {
+            background: #f5f5f5; text-align: center; padding: 10px;
+            font-weight: 700; font-size: 13px; color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        .validation-table table { width: 100%; }
+        .validation-table table td {
+            padding: 8px 14px; font-size: 12.5px;
+            border-bottom: 1px solid #eee; vertical-align: middle;
+        }
+        .validation-table table tr:last-child td { border-bottom: none; }
+        .validation-table table td:first-child {
+            font-weight: 700; color: #333; width: 160px;
+            text-align: right; padding-right: 16px; background: #fafafa;
+        }
+        .validation-table table td:last-child { color: #555; }
+        .copy-link { color: #1565c0; cursor: pointer; font-weight: 500; }
+        .copy-link:hover { text-decoration: underline; }
+
+        /* Download PDF button */
+        .download-pdf-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 6px; margin: 20px auto 0; padding: 9px 22px;
+            background: #1565c0; color: #fff; border: none;
+            border-radius: 4px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .download-pdf-btn:hover { background: #0d47a1; }
+        .download-pdf-btn i { font-size: 13px; }
+
+        /* ===== APPROVE MODAL ===== */
+        .approve-modal-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 1100;
+            align-items: center; justify-content: center;
+        }
+        .approve-modal-overlay.active { display: flex; }
+        .approve-modal {
+            background: #fff; border-radius: 10px;
+            width: 440px; max-width: 95%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            animation: modalIn 0.25s ease-out; overflow: hidden;
+        }
+        .approve-modal-header {
+            background: #1565c0; color: #fff; padding: 16px 20px;
+            font-size: 15px; font-weight: 600;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .approve-modal-header button {
+            background: none; border: none; color: #fff;
+            font-size: 18px; cursor: pointer;
+        }
+        .approve-modal-body { padding: 24px 20px; }
+        .approve-modal-body .info-row {
+            display: flex; margin-bottom: 10px; font-size: 13px;
+        }
+        .approve-modal-body .info-row .label {
+            font-weight: 600; width: 120px; color: #555;
+        }
+        .approve-modal-body .info-row .value { color: #333; }
+        .approve-modal-body .comment-area { margin-top: 14px; }
+        .approve-modal-body .comment-area label {
+            display: block; font-size: 13px; font-weight: 600;
+            color: #555; margin-bottom: 6px;
+        }
+        .approve-modal-body .comment-area textarea {
+            width: 100%; height: 70px; border: 1px solid #ccc;
+            border-radius: 6px; padding: 8px 10px; font-size: 13px;
+            font-family: 'Roboto', sans-serif; resize: vertical;
+        }
+        .approve-modal-footer {
+            padding: 0 20px 20px;
+            display: flex; gap: 10px; justify-content: flex-end;
+        }
+        .approve-modal-footer button {
+            padding: 9px 24px; border: none; border-radius: 6px;
+            font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-approve-confirm { background: #43a047; color: #fff; }
+        .btn-approve-confirm:hover { background: #388e3c; }
+        .btn-reject-confirm { background: #e53935; color: #fff; }
+        .btn-reject-confirm:hover { background: #c62828; }
+        .btn-cancel { background: #eee; color: #555; }
+        .btn-cancel:hover { background: #ddd; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed; top: 20px; right: 20px;
+            padding: 14px 24px; border-radius: 8px; color: #fff;
+            font-size: 13px; font-weight: 600; z-index: 2000;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            opacity: 0; transform: translateX(30px); transition: all 0.4s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast.success { background: #43a047; }
+        .toast.error { background: #e53935; }
+        .toast.info { background: #1565c0; }
+    </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- ===== TOP HEADER ===== -->
+<div class="top-header">
+    <div class="brand">
+        <i class="fas fa-graduation-cap"></i> e-Learning Information System
+    </div>
+    <nav class="top-nav">
+        <a href="#">Home</a>
+        <a href="#">My Learning</a>
+        <a href="#">All Courses</a>
+        <a href="#">Courses Propose</a>
+        <a href="#" class="active">Learning Manage</a>
+        <a href="#">Help</a>
+    </nav>
+    <div class="top-right">
+        <div class="company-info">
+            <div class="name">FPT IS COMPANY LIMITED</div>
+            <div class="role">Unit Admin</div>
+        </div>
+        <div class="user-avatar">HT</div>
+        <a href="login.html" title="Logout" style="color:#e53935;font-size:16px;"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+</div>
+
+<!-- ===== CONTENT ===== -->
+<div class="content-area">
+    <div class="breadcrumb">
+        <a href="#">Home</a> / <a href="#">Learning Manage</a>
+    </div>
+    <div class="page-title">LEARNING MANAGE</div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label>Search text</label>
+            <input type="text" id="searchText" placeholder="Enter email, user name or course name">
+        </div>
+        <div class="filter-group">
+            <label>Select Status</label>
+            <select id="filterStatus">
+                <option value="all">All</option>
+                <option value="WAITING" selected>Waiting</option>
+                <option value="APPROVED">Approved</option>
+                <option value="REJECTED">Rejected</option>
+            </select>
+        </div>
+        <div class="filter-actions">
+            <button class="btn-setting green" onclick="showToast('Setting Time dialog opened', 'info')">
+                <i class="fas fa-clock"></i> Setting Time
+            </button>
+            <button class="btn-setting blue" onclick="showToast('Exporting data...', 'info')">
+                <i class="fas fa-file-export"></i> Export
+            </button>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-wrapper">
+        <table class="data-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th style="width:70px;">ID</th>
+                    <th style="width:130px;">Employee Name</th>
+                    <th style="width:160px;">Employee Email</th>
+                    <th style="width:110px;">Company Name</th>
+                    <th style="width:65px;">Duration</th>
+                    <th style="min-width:250px;">Course Name</th>
+                    <th style="width:80px;">Status</th>
+                    <th style="width:90px;">Submit date</th>
+                    <th style="width:110px;">Approved/Reject date</th>
+                    <th style="width:120px;">Approved/Reject by</th>
+                    <th style="min-width:160px;">Comment</th>
+                    <th style="width:120px;">Certificate</th>
+                    <th style="width:70px;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- ===== CERTIFICATE VIEW MODAL ===== -->
+<div class="modal-overlay" id="certModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeCertModal()">&times;</button>
+        <div class="modal-body">
+            <!-- Certificate Card -->
+            <div class="certificate-card">
+                <div class="cert-badge">
+                    <div class="check-icon"><i class="fas fa-check"></i></div>
+                    <span>CERTIFICATE <small>of</small> COMPLETION</span>
+                </div>
+                <div class="cert-name" id="certName">Nguyen Thị PHương Lien LienNTP</div>
+                <div class="cert-subtitle">has completed</div>
+                <div class="cert-course" id="certCourse">Teaching the AI Fluency Framework</div>
+                <div class="cert-org">ANTHROPIC</div>
+                <div class="cert-partners">
+                    <div class="cert-partner">
+                        <i class="fas fa-university"></i>
+                        <div><strong>UCC</strong><br><span>University College<br>Cork</span></div>
+                    </div>
+                    <div class="cert-partner">
+                        <i class="fas fa-palette"></i>
+                        <div><strong>Ringling College</strong><br><span>of Art &amp; Design</span></div>
+                    </div>
+                    <div class="cert-partner">
+                        <i class="fas fa-landmark"></i>
+                        <div><strong>HEA</strong> <span>HIGHER EDUCATION AUTHORITY</span></div>
+                    </div>
+                    <div class="cert-partner">
+                        <i class="fas fa-globe"></i>
+                        <div><strong>NF</strong> <span>NATIONAL FORUM</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Info -->
+            <div class="validation-section">
+                <div class="validation-table">
+                    <div class="v-header">Skilljar Certificate Validation Information</div>
+                    <table>
+                        <tr><td>Student</td><td id="vStudent">Nguyen Thị PHương Lien LienNTP</td></tr>
+                        <tr><td>Certificate Link</td><td><span class="copy-link" onclick="showToast('Verify URL copied!', 'success')">Copy verify url</span></td></tr>
+                        <tr><td>Completion Date</td><td id="vDate">June 15, 2026</td></tr>
+                        <tr><td>Course Completed</td><td id="vCourse">Teaching AI Fluency</td></tr>
+                        <tr><td>Offered By</td><td>Anthropic Education</td></tr>
+                    </table>
+                </div>
+                <button class="download-pdf-btn" onclick="showToast('Downloading certificate as PDF...', 'info')">
+                    <i class="fas fa-download"></i> Download as PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== APPROVE / REJECT MODAL ===== -->
+<div class="approve-modal-overlay" id="approveModal">
+    <div class="approve-modal">
+        <div class="approve-modal-header">
+            <span><i class="fas fa-check-circle"></i> Approve / Reject Certificate</span>
+            <button onclick="closeApproveModal()">&times;</button>
+        </div>
+        <div class="approve-modal-body">
+            <div class="info-row"><span class="label">Employee:</span><span class="value" id="appEmployee">-</span></div>
+            <div class="info-row"><span class="label">Course:</span><span class="value" id="appCourse">-</span></div>
+            <div class="info-row"><span class="label">Submit Date:</span><span class="value" id="appDate">-</span></div>
+            <div class="comment-area">
+                <label for="approveComment">Comment</label>
+                <textarea id="approveComment" placeholder="Enter comment (optional)..."></textarea>
+            </div>
+        </div>
+        <div class="approve-modal-footer">
+            <button class="btn-cancel" onclick="closeApproveModal()">Cancel</button>
+            <button class="btn-reject-confirm" onclick="doReject()"><i class="fas fa-times"></i> Reject</button>
+            <button class="btn-approve-confirm" onclick="doApprove()"><i class="fas fa-check"></i> Approve</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== DATA =====
+const tableData = [
+    { id: 'D0003D13', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1.1', course: 'AI Fluency Framework', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1', course: 'Claude Code in Action', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '5', course: 'Claude 101', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '0.6', course: 'Teaching AI Fluency', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '2.11', course: 'AI Fluency Framework and Foundations by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0003D13', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1.01', course: 'Claude 101 by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1.12', course: 'Claude Code 101 by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0030071', name: 'Pham Thị Hồng Hạnh', email: 'HanhPTH15@fpt.com', company: 'FPT IS', duration: '2.11', course: 'AI Fluency Framework and Foundations by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0030071', name: 'Pham Thị Hồng Hạnh', email: 'HanhPTH15@fpt.com', company: 'FPT IS', duration: '0.6', course: 'Teaching AI Fluency', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
+    { id: 'D0030896', name: 'Ngô Thị Phương Lan', email: 'LanNTP24@fpt.com', company: 'FPT IS', duration: '1.1', course: 'AI Fluency Framework', status: 'WAITING', submitDate: '22/08/2026', approvedDate: '25/08/2026', approvedBy: 'Cao Thị Huyền Trân', comment: 'Bổ sung thời gian hoàn thành' },
+];
+
+// Clone for more pages
+let allData = [...tableData];
+for (let i = 0; i < 4; i++) {
+    allData = allData.concat(tableData.map(r => ({...r})));
+}
+
+const PAGE_SIZE = 10;
+let currentPage = 1;
+let filteredData = [...allData];
+let currentApproveRow = null;
+
+// ===== FUNCTIONS =====
+function filterAndRender() {
+    const search = document.getElementById('searchText').value.toLowerCase().trim();
+    const status = document.getElementById('filterStatus').value;
+    filteredData = allData.filter(row => {
+        const matchSearch = !search ||
+            row.name.toLowerCase().includes(search) ||
+            row.email.toLowerCase().includes(search) ||
+            row.course.toLowerCase().includes(search);
+        const matchStatus = status === 'all' || row.status === status;
+        return matchSearch && matchStatus;
+    });
+    currentPage = 1;
+    renderTable();
+    renderPagination();
+}
+
+function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    const pageData = filteredData.slice(start, end);
+    tbody.innerHTML = pageData.map((row, i) => {
+        const globalIdx = start + i;
+        const statusClass = row.status.toLowerCase();
+        return `<tr>
+            <td>${row.id}</td>
+            <td>${row.name}</td>
+            <td>${row.email}</td>
+            <td>${row.company}</td>
+            <td style="text-align:center;">${row.duration}</td>
+            <td>${row.course}</td>
+            <td><span class="badge ${statusClass}">${row.status}</span></td>
+            <td>${row.submitDate}</td>
+            <td>${row.approvedDate}</td>
+            <td>${row.approvedBy}</td>
+            <td>${row.comment}</td>
+            <td>
+                <span class="action-link" onclick="openCertModal(${globalIdx})" style="margin-right:10px;">View</span>
+                <span class="action-link" onclick="showToast('Downloading...', 'info')">Download</span>
+            </td>
+            <td>
+                <span class="approve-link" onclick="openApproveModal(${globalIdx})">Approve</span>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function renderPagination() {
+    const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+    const container = document.getElementById('pagination');
+    let html = `<button class="nav-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&lt;</button>`;
+    for (let i = 1; i <= Math.min(totalPages, 6); i++) {
+        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+    }
+    html += `<button class="nav-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>&gt;</button>`;
+    container.innerHTML = html;
+}
+
+function goPage(p) {
+    const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+    if (p < 1 || p > totalPages) return;
+    currentPage = p;
+    renderTable();
+    renderPagination();
+}
+
+// Certificate modal
+function openCertModal(idx) {
+    const row = filteredData[idx] || filteredData[0];
+    document.getElementById('certName').textContent = row.name;
+    document.getElementById('certCourse').textContent = row.course;
+    document.getElementById('vStudent').textContent = row.name;
+    document.getElementById('vCourse').textContent = row.course;
+    document.getElementById('vDate').textContent = formatDateLong(row.submitDate);
+    document.getElementById('certModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeCertModal() {
+    document.getElementById('certModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Approve modal
+function openApproveModal(idx) {
+    currentApproveRow = idx;
+    const row = filteredData[idx];
+    document.getElementById('appEmployee').textContent = row.name + ' (' + row.email + ')';
+    document.getElementById('appCourse').textContent = row.course;
+    document.getElementById('appDate').textContent = row.submitDate;
+    document.getElementById('approveComment').value = '';
+    document.getElementById('approveModal').classList.add('active');
+}
+function closeApproveModal() {
+    document.getElementById('approveModal').classList.remove('active');
+    currentApproveRow = null;
+}
+function doApprove() {
+    if (currentApproveRow !== null) {
+        const row = filteredData[currentApproveRow];
+        row.status = 'APPROVED';
+        row.approvedDate = getTodayStr();
+        row.approvedBy = 'HT (Admin)';
+        row.comment = document.getElementById('approveComment').value || '';
+        renderTable();
+        showToast('Certificate approved successfully!', 'success');
+    }
+    closeApproveModal();
+}
+function doReject() {
+    if (currentApproveRow !== null) {
+        const row = filteredData[currentApproveRow];
+        row.status = 'REJECTED';
+        row.approvedDate = getTodayStr();
+        row.approvedBy = 'HT (Admin)';
+        row.comment = document.getElementById('approveComment').value || 'Rejected';
+        renderTable();
+        showToast('Certificate rejected', 'error');
+    }
+    closeApproveModal();
+}
+
+// Helpers
+function getTodayStr() {
+    const d = new Date();
+    return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+}
+function formatDateLong(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return dateStr;
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return months[parseInt(parts[1])-1] + ' ' + parseInt(parts[0]) + ', ' + parts[2];
+}
+function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+    t.className = 'toast ' + (type || 'info');
+    t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Event listeners
+document.getElementById('searchText').addEventListener('input', filterAndRender);
+document.getElementById('filterStatus').addEventListener('change', filterAndRender);
+
+// Close modals on overlay click
+document.getElementById('certModal').addEventListener('click', function(e) { if (e.target === this) closeCertModal(); });
+document.getElementById('approveModal').addEventListener('click', function(e) { if (e.target === this) closeApproveModal(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeCertModal(); closeApproveModal(); } });
+
+// Init
+filterAndRender();
+</script>
+</body>
+</html>

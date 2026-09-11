@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - e-Learning Information System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', 'Inter', Arial, sans-serif; font-size: 13px; color: #333; }
+
+        /* ===== LOGIN PAGE ===== */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 30%, #1e88e5 60%, #42a5f5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.08) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -20px) rotate(2deg); }
+        }
+        .login-container {
+            position: relative; z-index: 2;
+            width: 420px;
+            background: rgba(255,255,255,0.97);
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            padding: 48px 40px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.6s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-logo { text-align: center; margin-bottom: 32px; }
+        .login-logo-icon {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #1565c0, #42a5f5);
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 24px rgba(21,101,192,0.3);
+        }
+        .login-logo-icon i { font-size: 32px; color: #fff; }
+        .login-logo h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px; font-weight: 700; color: #1565c0;
+            letter-spacing: -0.5px;
+        }
+        .login-logo p { font-size: 13px; color: #777; margin-top: 4px; }
+
+        .login-form .form-group { margin-bottom: 20px; }
+        .login-form label {
+            display: block; font-size: 13px; font-weight: 600;
+            color: #444; margin-bottom: 6px;
+        }
+        .login-form .input-wrapper { position: relative; }
+        .login-form .input-wrapper i {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #aaa; font-size: 15px; transition: color 0.3s;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%; padding: 12px 14px 12px 42px;
+            border: 2px solid #e0e0e0; border-radius: 10px;
+            font-size: 14px; font-family: 'Inter', sans-serif;
+            transition: all 0.3s; background: #fafafa;
+        }
+        .login-form input:focus {
+            outline: none; border-color: #1e88e5;
+            background: #fff; box-shadow: 0 0 0 4px rgba(30,136,229,0.1);
+        }
+        .login-form .input-wrapper:focus-within i { color: #1e88e5; }
+        .login-form .remember-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px; font-size: 13px;
+        }
+        .login-form .remember-row label {
+            display: flex; align-items: center; gap: 6px;
+            font-weight: 400; cursor: pointer; margin-bottom: 0;
+        }
+        .login-form .remember-row a { color: #1e88e5; font-weight: 500; text-decoration: none; }
+        .login-form .remember-row a:hover { text-decoration: underline; }
+        .login-btn {
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, #1565c0, #1e88e5);
+            color: #fff; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif;
+            cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(21,101,192,0.3);
+            letter-spacing: 0.3px;
+        }
+        .login-btn:hover {
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            box-shadow: 0 6px 20px rgba(21,101,192,0.4);
+            transform: translateY(-1px);
+        }
+        .login-btn:active { transform: translateY(0); }
+        .login-footer { text-align: center; margin-top: 24px; font-size: 12px; color: #999; }
+
+        /* Toast */
+        .toast {
+            position: fixed; top: 20px; right: 20px;
+            padding: 14px 24px; border-radius: 8px; color: #fff;
+            font-size: 13px; font-weight: 600; z-index: 2000;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            opacity: 0; transform: translateX(30px); transition: all 0.4s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast.success { background: #43a047; }
+        .toast.error { background: #e53935; }
+    </style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="login-page">
+    <div class="login-container">
+        <div class="login-logo">
+            <div class="login-logo-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>e-Learning Information System</h1>
+            <p>FPT IS Company Limited</p>
+        </div>
+        <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" placeholder="Enter your username" autocomplete="off">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="Enter your password">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            <div class="remember-row">
+                <label>
+                    <input type="checkbox"> Remember me
+                </label>
+                <a href="#">Forgot password?</a>
+            </div>
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+        <div class="login-footer">
+            &copy; 2026 FPT Information System. All rights reserved.
+        </div>
+    </div>
+</div>
+
+<script>
+function handleLogin(e) {
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    if (!user || !pass) {
+        showToast('Please enter username and password', 'error');
+        return;
+    }
+    showToast('Login successful! Redirecting...', 'success');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 800);
+}
+
+function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle' };
+    t.className = 'toast ' + (type || 'success');
+    t.innerHTML = '<i class="fas ' + (icons[type] || icons.success) + '"></i> ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
