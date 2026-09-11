@@ -199,7 +199,7 @@
 
         /* Certificate card */
         .certificate-card {
-            background: #6ba3c7; border-radius: 8px;
+            background: #d5c8b8; border-radius: 8px;
             padding: 40px 50px 36px; text-align: center;
             position: relative; margin-bottom: 30px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -465,28 +465,10 @@
                     <div class="check-icon"><i class="fas fa-check"></i></div>
                     <span>CERTIFICATE <small>of</small> COMPLETION</span>
                 </div>
-                <div class="cert-name" id="certName">Nguyen Thị PHương Lien LienNTP</div>
+                <div class="cert-name" id="certName">Phu Nguyen Ba PhuNB2</div>
                 <div class="cert-subtitle">has completed</div>
-                <div class="cert-course" id="certCourse">Teaching the AI Fluency Framework</div>
+                <div class="cert-course" id="certCourse">Claude 101</div>
                 <div class="cert-org">ANTHROPIC</div>
-                <div class="cert-partners">
-                    <div class="cert-partner">
-                        <i class="fas fa-university"></i>
-                        <div><strong>UCC</strong><br><span>University College<br>Cork</span></div>
-                    </div>
-                    <div class="cert-partner">
-                        <i class="fas fa-palette"></i>
-                        <div><strong>Ringling College</strong><br><span>of Art &amp; Design</span></div>
-                    </div>
-                    <div class="cert-partner">
-                        <i class="fas fa-landmark"></i>
-                        <div><strong>HEA</strong> <span>HIGHER EDUCATION AUTHORITY</span></div>
-                    </div>
-                    <div class="cert-partner">
-                        <i class="fas fa-globe"></i>
-                        <div><strong>NF</strong> <span>NATIONAL FORUM</span></div>
-                    </div>
-                </div>
             </div>
 
             <!-- Validation Info -->
@@ -494,10 +476,10 @@
                 <div class="validation-table">
                     <div class="v-header">Skilljar Certificate Validation Information</div>
                     <table>
-                        <tr><td>Student</td><td id="vStudent">Nguyen Thị PHương Lien LienNTP</td></tr>
+                        <tr><td>Student</td><td id="vStudent">Phu Nguyen Ba PhuNB2</td></tr>
                         <tr><td>Certificate Link</td><td><span class="copy-link" onclick="showToast('Verify URL copied!', 'success')">Copy verify url</span></td></tr>
                         <tr><td>Completion Date</td><td id="vDate">June 15, 2026</td></tr>
-                        <tr><td>Course Completed</td><td id="vCourse">Teaching AI Fluency</td></tr>
+                        <tr><td>Course Completed</td><td id="vCourse">Claude 101</td></tr>
                         <tr><td>Offered By</td><td>Anthropic Education</td></tr>
                     </table>
                 </div>
@@ -536,23 +518,10 @@
 <script>
 // ===== DATA =====
 const tableData = [
-    { id: 'D0003D13', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1.1', course: 'AI Fluency Framework', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1', course: 'Claude Code in Action', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '5', course: 'Claude 101', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '0.6', course: 'Teaching AI Fluency', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '2.11', course: 'AI Fluency Framework and Foundations by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0003D13', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1.01', course: 'Claude 101 by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0038243', name: 'Nguyễn Bình Bạ', email: 'BaNB@fpt.com', company: 'FPT IS', duration: '1.12', course: 'Claude Code 101 by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0030071', name: 'Pham Thị Hồng Hạnh', email: 'HanhPTH15@fpt.com', company: 'FPT IS', duration: '2.11', course: 'AI Fluency Framework and Foundations by Anthropic', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0030071', name: 'Pham Thị Hồng Hạnh', email: 'HanhPTH15@fpt.com', company: 'FPT IS', duration: '0.6', course: 'Teaching AI Fluency', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
-    { id: 'D0030896', name: 'Ngô Thị Phương Lan', email: 'LanNTP24@fpt.com', company: 'FPT IS', duration: '1.1', course: 'AI Fluency Framework', status: 'WAITING', submitDate: '22/08/2026', approvedDate: '25/08/2026', approvedBy: 'Cao Thị Huyền Trân', comment: 'Bổ sung thời gian hoàn thành' },
+    { id: 'D0038243', name: 'Nguyễn Bá Phú', certName: 'Phu Nguyen Ba PhuNB2', email: 'phunb2@fpt.com', company: 'FPT IS', duration: '3', course: 'Claude 101', status: 'WAITING', submitDate: '11/09/2026', approvedDate: '', approvedBy: '', comment: '' },
 ];
 
-// Clone for more pages
 let allData = [...tableData];
-for (let i = 0; i < 4; i++) {
-    allData = allData.concat(tableData.map(r => ({...r})));
-}
 
 const PAGE_SIZE = 10;
 let currentPage = 1;
@@ -629,9 +598,10 @@ function goPage(p) {
 // Certificate modal
 function openCertModal(idx) {
     const row = filteredData[idx] || filteredData[0];
-    document.getElementById('certName').textContent = row.name;
+    const displayName = row.certName || row.name;
+    document.getElementById('certName').textContent = displayName;
     document.getElementById('certCourse').textContent = row.course;
-    document.getElementById('vStudent').textContent = row.name;
+    document.getElementById('vStudent').textContent = displayName;
     document.getElementById('vCourse').textContent = row.course;
     document.getElementById('vDate').textContent = formatDateLong(row.submitDate);
     document.getElementById('certModal').classList.add('active');
